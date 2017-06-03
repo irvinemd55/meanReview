@@ -1,30 +1,31 @@
 var Category = require('./categoryModel');
 var _ = require('lodash');
 
+
 exports.params = function(req, res, next, id) {
-  Category.findById(id)
-  .then(function(category) {
-    if(!category) {
-      next(new Error('No category with that id'));
-    } else {
-      req.category = category;
-      next();
+  User.findById(id)
+    .then(function(user) {
+      if (!user) {
+        next(new Error('No user with that id'));
+      } else {
+        req.user = user;
+        next();
+      }
     }, function(err) {
       next(err);
-    }
-
-  });
-};
-
-exports.get = function(req, res, next) {
-  Category.find({})
-    .then(function(categories) {
-      res.json(categories);
-      function(err) {
-        next(err);
-      },
     });
 };
+
+
+exports.get = function(req, res, next) {
+  User.find({})
+    .then(function(users){
+      res.json(users);
+    }, function(err){
+      next(err);
+    });
+};
+
 
 exports.getOne = function(req, res, next) {
   var category = req.category;
