@@ -1,13 +1,15 @@
-var User = require('./userModel');
+var Post = require('./postModel');
 var _ = require('lodash');
 
 exports.params = function(req, res, next, id) {
-  User.findById(id)
-    .then(function(user) {
-      if (!user) {
-        next(new Error('No user with that id'));
+  Post.findById(id)
+    .populate('author categories')
+    .exec()
+    .then(function(post) {
+      if (!post) {
+        next(new Error('No post with that id'));
       } else {
-        req.user = user;
+        req.post = post;
         next();
       }
     }, function(err) {
@@ -16,9 +18,11 @@ exports.params = function(req, res, next, id) {
 };
 
 exports.get = function(req, res, next) {
-  User.find({})
-    .then(function(users){
-      res.json(users);
+  Post.find({})
+    .populate('author categories')
+    .exec()
+    .then(function(posts){
+      res.json(posts);
     }, function(err){
       next(err);
     });
@@ -30,13 +34,13 @@ exports.getOne = function(req, res, next) {
 };
 
 exports.put = function(req, res, next) {
-  var user = req.user;
+  var post = req.post;
 
   var update = req.body;
 
-  _.merge(user, update);
+  _.merge(post, update);
 
-  user.save(function(err, saved) {
+  post.save(function(err, saved) {
     if (err) {
       next(err);
     } else {
@@ -46,18 +50,18 @@ exports.put = function(req, res, next) {
 };
 
 exports.post = function(req, res, next) {
-  var newUser = req.body;
+  var newpost = req.body;
 
-  User.create(newUser)
-    .then(function(user) {
-      res.json(user);
+  Post.create(newpost)
+    .then(function(post) {
+      res.json(post);
     }, function(err) {
       next(err);
     });
 };
 
 exports.delete = function(req, res, next) {
-  req.user.remove(function(err, removed) {
+  req.post.remove(function(err, removed) {
     if (err) {
       next(err);
     } else {
