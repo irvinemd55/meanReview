@@ -13,9 +13,15 @@ var PostSchema = new Schema({
     require: true
   },
 
-  author: [{type: Schema.Types.ObjectId, ref: 'user'}],
+  author: {
+      type: Schema.Types.ObjectId,
+      ref: 'user',
+      required: true
+      },
 
-  categories: [{type: Schema.Types.ObjectId, ref: 'category'}]
+  categories: [
+    {type: Schema.Types.ObjectId, ref: 'category'}
+    ]
 
 });
 

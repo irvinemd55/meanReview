@@ -11,7 +11,11 @@ var UserSchema = new Schema({
 
   address: {
     state: String
-  }
+  },
+  posts: [
+    {ref: 'posts', type: Schema.Types.ObjectId}
+  ]
+
 });
 
 module.exports = mongoose.model('user', UserSchema);
